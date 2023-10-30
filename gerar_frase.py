@@ -235,22 +235,26 @@ def get_subsequent_in_phrase(word, words):
     return print("Essa palavra não esta no documento")
 
 
-
 def make_phrase(lista1, lista2, word, number):
     anterior = get_previous(lista1, word)
     posterior = get_subsequent(lista2, word)
-    frase = ""
     if number == 0:
-        frase = "Você escolher zero numeros de palavras na frase"
+        frase = "Você escolheu zero numeros de palavras na frase"
+        return frase
     elif number == 1:
+        frase = word
+        return frase
+    elif number == 2:
         option = desempatar2(anterior, posterior)
         if option == anterior:
             frase = f"{anterior} {word}"
+            return frase
         elif option == posterior:
             frase = f"{word} {posterior}"
-    elif number == 2:
+            return frase
+    elif number >= 3:
         frase = f"{anterior} {word} {posterior}"
-    return frase
+        return frase
 
 
 def phrases(frase, words, number):
@@ -259,29 +263,36 @@ def phrases(frase, words, number):
       o programa e formar frases maiores de acordo com a sua vontade
       :param frase: frase que foi formada anteiormente, quando o usuário digitou a palavra que ele quis
       :param words: todas as palavras presentes no texto
+      :param number: numero de termos que o usuário quer que a frase tenha
       :return: Mensagem de programa encerrado
       """
     resp = 0
-    for i in range( 1, (number % 2))
+    metade = number // 2
     while resp < 1:
-        palavras = frase.split()
-        palavra_inicial = palavras[0]
-        palavra_final = palavras[-1]
-        anterior = get_previous_in_phrase(palavra_inicial, words)
-        posterior = get_subsequent_in_phrase(palavra_final, words)
-        nova_frase = f"{anterior} {frase} {posterior}"
-
-        frase = nova_frase
-
-        try:
-            if resp != 0:
-                print(nova_frase)
-                break
+        for i in range(1, metade):
+            palavras = frase.split()
+            palavra_inicial = palavras[0]
+            palavra_final = palavras[-1]
+            anterior = get_previous_in_phrase(palavra_inicial, words)
+            posterior = get_subsequent_in_phrase(palavra_final, words)
+            if (number - len(palavras)) % 2 == 0:
+                nova_frase = f"{anterior} {frase} {posterior}"
             else:
-                print(nova_frase)
-        except ValueError:
-            print("Digite um valor inteiro positivo")
-    return print("Programa encerrado.")
+                desempate = desempatar2(anterior, posterior)
+                if desempate == anterior:
+                    nova_frase = f"{anterior} {frase}"
+                else:
+                    nova_frase = f"{frase} {posterior}"
+
+            frase = nova_frase
+
+            try:
+                if resp != 0:
+                    return nova_frase
+            except ValueError:
+                print("Digite um valor inteiro positivo")
+        resp = 1
+    return frase
 
 
 def generate_sentence(word, style, number):
@@ -293,7 +304,10 @@ def generate_sentence(word, style, number):
         fill_itens(lista_de_busca, word, words, previous, subsequent)
         check_tie(previous, subsequent, lista_de_busca)
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
-        frase = check_print_tie(lista1, lista2, word)
-
-        return frase
+        frase = make_phrase(lista1, lista2, word, number)
+        #  print("frase inicial: ", frase)
+        if number > 3:
+            nova_frase = phrases(frase, words, number)
+            return print(nova_frase)
+        return print(frase)
     return print("A palavra que você buscou não está no documento lido.")
