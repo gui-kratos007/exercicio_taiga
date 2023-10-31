@@ -137,7 +137,14 @@ def desempatar(lista):
     escolha = random.choice(lista)
     return escolha
 
+
 def desempatar2(um, dois):
+    """
+    escolhe um item aleatorio dentre as 2 opções que forem designadas ao chamar essa função
+    :param um: primeira opção das possiveis para desempatar
+    :param dois: segunda opção das possiveis para desempatar
+    :return: uma das duas opções possiveis, que sofreu uma escolha aleatória
+    """
     lista = [um, dois]
     escolha = random.choice(lista)
     return escolha
@@ -236,6 +243,14 @@ def get_subsequent_in_phrase(word, words):
 
 
 def make_phrase(lista1, lista2, word, number):
+    """
+    forma uma frase aleatória dependendo da palavra e do numero de termos escolhidos pelo usuário
+    :param lista1: lista de palavras (do documento lido) anteriores à escolhida pelo usuário
+    :param lista2: lista de palavras (do documento lido) posteriores à escolhida pelo usuário
+    :param word: palavra escolhida pelo usuário
+    :param number: número de termos escolhido pelo usuário
+    :return: frase aleatória gerada a partir da escolha de palavra e número de termos feita pelo usuário
+    """
     anterior = get_previous(lista1, word)
     posterior = get_subsequent(lista2, word)
     if number == 0:
@@ -296,6 +311,15 @@ def phrases(frase, words, number):
 
 
 def generate_sentence(word, style, number):
+    """
+    gera a frase aleatória a partir da palavra e número de termos escolhidos pelo usuário. Essa frase
+    terá exatamente o mesmo número de termos (palavras) que o usuário digitou.
+    :param word: palavra escolhida pelo usuário
+    :param style: nome do estilo de documento que deve ser lido
+    :param number: número de termos escolhido pelo usuário
+    :return: frase aleatória gerada a partir das escolhas feitas pelo usuário. Essa frase
+    terá o mesmo número de termos (palavras) que o usuário digitou.
+    """
     lista_de_busca = []
     previous = {}
     subsequent = {}
