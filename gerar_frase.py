@@ -95,6 +95,72 @@ def add_itens_in_dicts(func, dict1, dict2, word, words):
     return dict1, dict2
 
 
+def sequency_anteriores(lista, words):
+    anteriores = []
+    for j in range(len(lista)):
+        anteriores2 = []
+        for i, item in enumerate(words):
+            if i == lista[j]:
+                break
+            anteriores2.append(item)
+        anteriores.append(anteriores2)
+    print("Anteriores:")
+    print(anteriores)
+    return anteriores
+
+
+def sequency_posteriores(lista, words):
+    posteriores = []
+    for j in range(len(lista)):
+        posteriores2 = []
+        for i, item in enumerate(words):
+            if i <= lista[j]:
+                continue
+            posteriores2.append(item)
+        posteriores.append(posteriores2)
+    print("Posteriores:")
+    print(posteriores)
+    return posteriores
+
+
+"""def add_previous_n(number, lista, words):
+    previous_n = []
+    for i, item in enumerate(words):
+        for j, iten in enumerate(lista):
+            if words[i] == lista[j]:
+                words[i - number]
+                previous_n.append(item)
+    print(previous_n)
+    return previous_n
+"""
+
+def add_subsequent_n(number, seq2, lista, words):
+    subsequent_n = []
+    for i in enumerate(words):
+        for j in range(lista):
+            if words[i] == lista[j]:
+                for k, item in enumerate(seq2):
+                    if seq2[k] == words[i + number]:
+                        subsequent_n.append(item)
+    return subsequent_n
+
+
+def add_number(seq1, seq2, number):
+    previous_n = {}
+    subsequent_n = {}
+    for i in range(seq1):
+        if seq1[i] in previous_n:
+            previous_n[seq1[i]] += 1
+        else:
+            previous_n[seq1[i]] = 1
+    for i in range(seq2):
+        if seq2[i] in subsequent_n:
+            subsequent_n[seq2[i]] += 1
+        else:
+            subsequent_n[seq2[i]] = 1
+
+
+
 def fill_itens(lista, word, words, dict1, dict2):
     """
     Preenche automaticamente as listas e os dicts de acordo com a palavra em análise
@@ -107,6 +173,7 @@ def fill_itens(lista, word, words, dict1, dict2):
     """
     list_add = add_in_list(lista, word, words)
     add_itens_in_dicts(list_add, dict1, dict2, word, words)
+    return list_add
 
 def check_tie(dict1, dict2, lista):
     """
@@ -326,6 +393,9 @@ def generate_sentence(word, style, number):
     words = list_the_words(style)
     if word in words:
         fill_itens(lista_de_busca, word, words, previous, subsequent)
+        """add_previous_n(number, lista_de_busca, words)"""
+        sequency_anteriores(lista_de_busca, words)
+        sequency_posteriores(lista_de_busca, words)
         check_tie(previous, subsequent, lista_de_busca)
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
         frase = make_phrase(lista1, lista2, word, number)
@@ -335,3 +405,6 @@ def generate_sentence(word, style, number):
             return print(nova_frase)
         return print(frase)
     return print("A palavra que você buscou não está no documento lido.")
+
+
+generate_sentence("essa", "cientifico", 4)
