@@ -95,69 +95,54 @@ def add_itens_in_dicts(func, dict1, dict2, word, words):
     return dict1, dict2
 
 
-def sequency_anteriores(lista, words):
-    anteriores = []
-    for j in range(len(lista)):
-        anteriores2 = []
-        for i, item in enumerate(words):
-            if i == lista[j]:
-                break
-            anteriores2.append(item)
-        anteriores.append(anteriores2)
-    print("Anteriores:")
-    print(anteriores)
-    return anteriores
+def add_itens_in_previous_specifics(lista, words, number):
+    previous_specifics = {}
+    anteriores_especificos = get_previous_in_document(lista, words, number)
 
-
-def sequency_posteriores(lista, words):
-    posteriores = []
-    for j in range(len(lista)):
-        posteriores2 = []
-        for i, item in enumerate(words):
-            if i <= lista[j]:
-                continue
-            posteriores2.append(item)
-        posteriores.append(posteriores2)
-    print("Posteriores:")
-    print(posteriores)
-    return posteriores
-
-
-"""def add_previous_n(number, lista, words):
-    previous_n = []
-    for i, item in enumerate(words):
-        for j, iten in enumerate(lista):
-            if words[i] == lista[j]:
-                words[i - number]
-                previous_n.append(item)
-    print(previous_n)
-    return previous_n
-"""
-
-def add_subsequent_n(number, seq2, lista, words):
-    subsequent_n = []
-    for i in enumerate(words):
-        for j in range(lista):
-            if words[i] == lista[j]:
-                for k, item in enumerate(seq2):
-                    if seq2[k] == words[i + number]:
-                        subsequent_n.append(item)
-    return subsequent_n
-
-
-def add_number(seq1, seq2, number):
-    previous_n = {}
-    subsequent_n = {}
-    for i in range(seq1):
-        if seq1[i] in previous_n:
-            previous_n[seq1[i]] += 1
+    for i, item in enumerate(anteriores_especificos):
+        if item in previous_specifics:
+            previous_specifics[item] += 1
         else:
-            previous_n[seq1[i]] = 1
-    for i in range(seq2):
-        if seq2[i] in subsequent_n:
-            subsequent_n[seq2[i]] += 1
+            previous_specifics[item] = 1
+    print(previous_specifics)
+    return previous_specifics
+
+
+def add_itens_in_subsequent_specifics(lista, words, number):
+    subsequent_specifics = {}
+    posteriores_especificos = get_subsequent_in_document(lista, words, number)
+
+    for i, item in enumerate(posteriores_especificos):
+        if item in subsequent_specifics:
+            subsequent_specifics[item] += 1
         else:
-            subsequent_n[seq2[i]] = 1
+            subsequent_specifics[item] = 1
+    print(subsequent_specifics)
+    return subsequent_specifics
+
+
+def get_previous_in_document(lista, words, number):
+    anteriores_especificos = []
+    for i in lista:
+        print(lista)
+        for j, item in enumerate(words):
+            if j + number == i:
+                anteriores_especificos.append(item)
+                print(item)
+    print(anteriores_especificos)
+    return anteriores_especificos
+
+
+def get_subsequent_in_document(lista, words, number):
+    posteriores_especificos = []
+    for i in lista:
+        print(lista)
+        for j, item in enumerate(words):
+            if j - number == i:
+                posteriores_especificos.append(item)
+                print(item)
+    print(posteriores_especificos)
+    return posteriores_especificos
 
 
 
@@ -217,6 +202,16 @@ def desempatar2(um, dois):
     return escolha
 
 
+def desempata_lista(lista):
+    options = {
+        True: (desempatar(lista)),
+        False: (lista[0])
+    }
+
+    immediate_word = options[len(lista) > 1]
+    return immediate_word
+
+
 def get_previous(lista1, word):
     """
     Essa função pega a palavra anterior mais frequente da palavra digitada pelo usuário
@@ -235,7 +230,7 @@ def get_previous(lista1, word):
     return print("Essa palavra não esta no documento")
 
 
-def get_previous_in_phrase(word, words):
+def get_previous_in_phrase(word, words, number):
     """
     Essa função atribui valores à lista e as dicts de anteriores e posteriores criadas nesta função para
     que não fossem utiizadas as dicts originais, ou seja, com valores referentes e relacionados à palavra
@@ -243,22 +238,31 @@ def get_previous_in_phrase(word, words):
     usuário antes. Depois disso ela realiza a função get_previous para a palavra inicial da frase.
     :param word: palavra inicial da frase
     :param words: todas as palavras presentes no texto
+    :param number: numero de termos escolhidos pelo usuário
     :return: a função get_previous, ou seja, palavra anterior mais frequente ou mensagem de erro
     """
     lista = []
     previous1 = {}
     subsequent1 = {}
+    immediate_previous_list = []
     fill_itens(lista, word, words, previous1, subsequent1)
+    anteriores_especificos = get_previous_in_document(lista, words, number)
     check_tie(previous1, subsequent1, lista)
     lista1, lista2 = check_tie(previous1, subsequent1, lista)
 
-    if word:
-        options = {
-            True: (desempatar(lista1)),
-            False: (lista1[0])
-        }
-
-        immediate_previous = options[len(lista1) > 1]
+    for i in lista1:
+        for j in anteriores_especificos:
+            if lista1[i] == anteriores_especificos[j]:
+                previous = anteriores_especificos[j]
+                immediate_previous_list.append(previous)
+    if len(immediate_previous_list) > 1:
+        immediate_previous = desempatar(immediate_previous_list)
+        return immediate_previous
+    elif len(immediate_previous_list) == 1:
+        immediate_previous = immediate_previous_list[0]
+        return immediate_previous
+    elif len(immediate_previous_list) < 1:
+        immediate_previous = desempata_lista(lista1)
         return immediate_previous
     return print("Essa palavra não esta no documento")
 
@@ -281,30 +285,39 @@ def get_subsequent(lista2, word):
     return print("Essa palavra não esta no documento")
 
 
-def get_subsequent_in_phrase(word, words):
+def get_subsequent_in_phrase(word, words, number):
     """
     Essa função atribui valores à lista e as dicts de anteriores e posteriores criadas nesta função para
     que não fossem utiizadas as dicts originais, ou seja, com valores referentes e relacionados à palavra
     digitada pelo usuário, já que a palavra que deveria ser o parametro dessa vez não é a digitada pelo
-    usuário antes. Depois disso ela realiza a função get_subsequent para a palavra final da frase.
-    :param word: palavra final da frase
+    usuário antes. Depois disso ela realiza a função get_previous para a palavra inicial da frase.
+    :param word: palavra inicial da frase
     :param words: todas as palavras presentes no texto
-    :return: a função get_subsequent, ou seja, palavra posterior mais frequente ou mensagem de erro
+    :param number: numero de termos escolhidos pelo usuário
+    :return: a função get_previous, ou seja, palavra anterior mais frequente ou mensagem de erro
     """
     lista = []
-    previous2 = {}
-    subsequent2 = {}
-    fill_itens(lista, word, words, previous2, subsequent2)
-    check_tie(previous2, subsequent2, lista)
-    lista1, lista2 = check_tie(previous2, subsequent2, lista)
+    previous1 = {}
+    subsequent1 = {}
+    immediate_subsequent_list = []
+    fill_itens(lista, word, words, previous1, subsequent1)
+    posteriores_especificos = get_subsequent_in_document(lista, words, number)
+    check_tie(previous1, subsequent1, lista)
+    lista1, lista2 = check_tie(previous1, subsequent1, lista)
 
-    if word:
-        options = {
-            True: (desempatar(lista2)),
-            False: (lista2[0])
-        }
-
-        immediate_subsequent = options[len(lista2) > 1]
+    for i in lista2:
+        for j in posteriores_especificos:
+            if lista2[i] == posteriores_especificos[j]:
+                subsequent = posteriores_especificos[j]
+                immediate_subsequent_list.append(subsequent)
+    if len(immediate_subsequent_list) > 1:
+        immediate_subsequent = desempatar(immediate_subsequent_list)
+        return immediate_subsequent
+    elif len(immediate_subsequent_list) == 1:
+        immediate_subsequent = immediate_subsequent_list[0]
+        return immediate_subsequent
+    elif len(immediate_subsequent_list) < 1:
+        immediate_subsequent = desempata_lista(lista2)
         return immediate_subsequent
     return print("Essa palavra não esta no documento")
 
@@ -355,8 +368,8 @@ def phrases(frase, words, number):
             palavras = frase.split()
             palavra_inicial = palavras[0]
             palavra_final = palavras[-1]
-            anterior = get_previous_in_phrase(palavra_inicial, words)
-            posterior = get_subsequent_in_phrase(palavra_final, words)
+            anterior = get_previous_in_phrase(palavra_inicial, words, number)
+            posterior = get_subsequent_in_phrase(palavra_final, words, number)
             if (number - len(palavras)) % 2 == 0:
                 nova_frase = f"{anterior} {frase} {posterior}"
             else:
@@ -394,10 +407,18 @@ def generate_sentence(word, style, number):
     if word in words:
         fill_itens(lista_de_busca, word, words, previous, subsequent)
         """add_previous_n(number, lista_de_busca, words)"""
-        sequency_anteriores(lista_de_busca, words)
+        """sequency_anteriores(lista_de_busca, words)
         sequency_posteriores(lista_de_busca, words)
-        check_tie(previous, subsequent, lista_de_busca)
+        anteriores = sequency_anteriores(lista_de_busca, words)"""
+        previous_specifics = add_itens_in_previous_specifics(lista_de_busca, words, number)
+        subsequent_specifics = add_itens_in_subsequent_specifics(lista_de_busca, words, number)
+        """anteriores1 = anteriores[0]
+        print(anteriores1[1])"""
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
+        lista3, lista4 = check_tie(previous_specifics, subsequent_specifics, lista_de_busca)
+        print("ESSAS: ")
+        print(lista1)
+        print(lista2)
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:
