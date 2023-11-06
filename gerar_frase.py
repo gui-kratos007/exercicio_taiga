@@ -117,7 +117,7 @@ def add_itens_in_subsequent_specifics(lista, words, number):
             subsequent_specifics[item] += 1
         else:
             subsequent_specifics[item] = 1
-    print(subsequent_specifics)
+    print(f"posteriores especificos: {subsequent_specifics}")
     return subsequent_specifics
 
 
@@ -170,6 +170,7 @@ def check_tie(dict1, dict2, lista):
     """
     # Encontra a(s) palavra(s) mais frequente(s)
     previous_word = max(dict1, key=lambda k: dict1[k])
+    print(f"Palavra anterior com mais aparições: {previous_word}")
     subsequent_word = max(dict2, key=lambda k: dict2[k])
 
     # Verifica se há empate de palavras mais frequentes
@@ -250,8 +251,9 @@ def get_previous_in_phrase(word, words, number):
     check_tie(previous1, subsequent1, lista)
     lista1, lista2 = check_tie(previous1, subsequent1, lista)
 
-    for i in lista1:
-        for j in anteriores_especificos:
+    for i, item in enumerate(lista1):
+        print(f"index: {i}, item: {item}")
+        for j, item2 in enumerate(anteriores_especificos):
             if lista1[i] == anteriores_especificos[j]:
                 previous = anteriores_especificos[j]
                 immediate_previous_list.append(previous)
@@ -305,8 +307,8 @@ def get_subsequent_in_phrase(word, words, number):
     check_tie(previous1, subsequent1, lista)
     lista1, lista2 = check_tie(previous1, subsequent1, lista)
 
-    for i in lista2:
-        for j in posteriores_especificos:
+    for i, item in enumerate(lista2):
+        for j, item2 in enumerate(posteriores_especificos):
             if lista2[i] == posteriores_especificos[j]:
                 subsequent = posteriores_especificos[j]
                 immediate_subsequent_list.append(subsequent)
@@ -419,6 +421,8 @@ def generate_sentence(word, style, number):
         print("ESSAS: ")
         print(lista1)
         print(lista2)
+        print(lista3)
+        print(lista4)
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:
