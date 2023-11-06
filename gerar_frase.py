@@ -126,9 +126,12 @@ def get_previous_in_document(lista, words, number):
     for i in lista:
         print(lista)
         for j, item in enumerate(words):
-            if j + number == i:
-                anteriores_especificos.append(item)
-                print(item)
+            for k in range(4, number):
+
+                #  esse if ta errado
+                if j + list_number[k] == i:
+                    anteriores_especificos.append(item)
+                    print(item)
     print(anteriores_especificos)
     return anteriores_especificos
 
@@ -247,8 +250,8 @@ def get_previous_in_phrase(word, words, number):
     subsequent1 = {}
     immediate_previous_list = []
     fill_itens(lista, word, words, previous1, subsequent1)
-    anteriores_especificos = get_previous_in_document(lista, words, number)
-    check_tie(previous1, subsequent1, lista)
+    anteriores_especificos = add_itens_in_previous_specifics(lista, words, number)
+    anteriores_mais_frequentes = check_tie(anteriores_especificos, subsequent1, lista)
     lista1, lista2 = check_tie(previous1, subsequent1, lista)
 
     for i, item in enumerate(lista1):
