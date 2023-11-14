@@ -21,7 +21,7 @@ def check_tie(dict1, dict2, lista):
         return previous_word_tie, subsequent_word_tie
     return print("não tem nenhuma palavra nas listas")
 
-def desempate_anteriores(lista1, lista2):
+def desempate_anteriores(lista1, lista2, dict1, dict2):
     anteriores = []
 
     for i, item in enumerate(lista1):
@@ -30,31 +30,45 @@ def desempate_anteriores(lista1, lista2):
                 anteriores.append(item)
 
     if len(anteriores) == 0:
-        anteriores = lista1 + lista3
+        anteriores = lista1 + lista2
         escolha = random.choice(anteriores)
         return escolha
-    elif len(anteriores) > 1:
-        escolha = random.choice(anteriores)
+    elif len(anteriores) == 1:
+        escolha = anteriores[0]
         return escolha
     else:
-        escolha = random.choice(anteriores)
+        result_dict = print_percentage_previous(dict1, dict2)
+        escolha = compare_frequencia_anteriores(result_dict, anteriores)
         return escolha
 
 
-def desempate_posteriores(lista1, lista2):
+def desempate_posteriores(lista1, lista2, dict3, dict4):
     posteriores = []
 
     for i, item in enumerate(lista1):
         for j, item2 in enumerate(lista2):
             if item2 == item:
                 posteriores.append(item)
+
     if len(posteriores) == 0:
         posteriores = lista1 + lista2
         escolha = random.choice(posteriores)
         return escolha
     elif len(posteriores) > 1:
-        escolha = random.choice(posteriores)
+        escolha = posteriores[0]
         return escolha
     else:
-        escolha = random.choice(posteriores)
+        result_dict = print_percentage_subsequent(dict3, dict4)
+        escolha = compare_frequencia_posteriores(result_dict, posteriores)
         return escolha
+
+def desempatar2(um, dois):
+    """
+    escolhe um item aleatorio dentre as 2 opções que forem designadas ao chamar essa função
+    :param um: primeira opção das possiveis para desempatar
+    :param dois: segunda opção das possiveis para desempatar
+    :return: uma das duas opções possiveis, que sofreu uma escolha aleatória
+    """
+    lista = [um, dois]
+    escolha = random.choice(lista)
+    return escolha
