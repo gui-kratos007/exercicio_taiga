@@ -126,10 +126,9 @@ def get_previous_in_document(lista, words, number):
     for i in lista:
         print(lista)
         for j, item in enumerate(words):
-            for k in range(4, number):
-
+            for item2, k in range(4, number):
                 #  esse if ta errado
-                if j + number[k] == i:
+                if j + item2 == i:
                     anteriores_especificos.append(item)
                     print(item)
     print(anteriores_especificos)
@@ -141,9 +140,10 @@ def get_subsequent_in_document(lista, words, number):
     for i in lista:
         print(lista)
         for j, item in enumerate(words):
-            if j - number == i:
-                posteriores_especificos.append(item)
-                print(item)
+            for k, item2 in range(4, number):
+                if j - item2 == i:
+                    posteriores_especificos.append(item)
+                    print(item)
     print(posteriores_especificos)
     return posteriores_especificos
 

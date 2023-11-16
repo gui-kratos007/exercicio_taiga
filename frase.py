@@ -1,5 +1,6 @@
 import random
 from carregar_arquivo import load_file
+from desempata import *
 
 def text_clean(text):
     """
@@ -95,6 +96,60 @@ def add_itens_in_dicts(func, dict1, dict2, word, words):
     return dict1, dict2
 
 
+def add_itens_in_previous_specifics(lista, words, number):
+    previous_specifics = {}
+    anteriores_especificos = get_previous_in_document(lista, words, number)
+
+    for i, item in enumerate(anteriores_especificos):
+        if item in previous_specifics:
+            previous_specifics[item] += 1
+        else:
+            previous_specifics[item] = 1
+    print(previous_specifics)
+    return previous_specifics
+
+
+def add_itens_in_subsequent_specifics(lista, words, number):
+    subsequent_specifics = {}
+    posteriores_especificos = get_subsequent_in_document(lista, words, number)
+
+    for i, item in enumerate(posteriores_especificos):
+        if item in subsequent_specifics:
+            subsequent_specifics[item] += 1
+        else:
+            subsequent_specifics[item] = 1
+    print(f"posteriores especificos: {subsequent_specifics}")
+    return subsequent_specifics
+
+
+def get_previous_in_document(lista, words, number):
+    anteriores_especificos = []
+    for i in lista:
+        print(lista)
+        for j, item in enumerate(words):
+            for item2, k in range(4, number):
+                #  esse if ta errado
+                if j + item2 == i:
+                    anteriores_especificos.append(item)
+                    print(item)
+    print(anteriores_especificos)
+    return anteriores_especificos
+
+
+def get_subsequent_in_document(lista, words, number):
+    posteriores_especificos = []
+    for i in lista:
+        print(lista)
+        for j, item in enumerate(words):
+            for k, item2 in range(4, number):
+                if j - item2 == i:
+
+                    posteriores_especificos.append(item)
+                    print(item)
+    print(posteriores_especificos)
+    return posteriores_especificos
+
+
 def fill_itens(lista, word, words, dict1, dict2):
     """
     Preenche automaticamente as listas e os dicts de acordo com a palavra em análise
@@ -108,58 +163,6 @@ def fill_itens(lista, word, words, dict1, dict2):
     list_add = add_in_list(lista, word, words)
     add_itens_in_dicts(list_add, dict1, dict2, word, words)
     return list_add
-
-def check_tie(dict1, dict2, lista):
-    """
-    Encontra as palavras mais frequentes e ve se tem empate de aparições
-    :param dict1: dict das palavras anteriores
-    :param dict2: dict das palavras posteriores
-    :param lista: lista de indices da palavra escolhida pelo usuário
-    :return: mensagem de erro
-    """
-    # Encontra a(s) palavra(s) mais frequente(s)
-    previous_word = max(dict1, key=lambda k: dict1[k])
-    print(f"Palavra anterior com mais aparições: {previous_word}")
-    subsequent_word = max(dict2, key=lambda k: dict2[k])
-
-    # Verifica se há empate de palavras mais frequentes
-    previous_word_tie = [word for word in dict1 if dict1[word] == dict1[previous_word]]
-    subsequent_word_tie = [word for word in dict2 if dict2[word] == dict2[subsequent_word]]
-    if len(lista) > 0:
-        return previous_word_tie, subsequent_word_tie
-    return print("não tem nenhuma palavra nas listas")
-
-
-def desempatar(lista):
-    """
-    escolhe um item aleatório da lista
-    :param lista: lista de palavras a serem sorteadas
-    :return: a escolha, ou seja, o item que foi sorteado
-    """
-    escolha = random.choice(lista)
-    return escolha
-
-
-def desempatar2(um, dois):
-    """
-    escolhe um item aleatorio dentre as 2 opções que forem designadas ao chamar essa função
-    :param um: primeira opção das possiveis para desempatar
-    :param dois: segunda opção das possiveis para desempatar
-    :return: uma das duas opções possiveis, que sofreu uma escolha aleatória
-    """
-    lista = [um, dois]
-    escolha = random.choice(lista)
-    return escolha
-
-
-def desempata_lista(lista):
-    options = {
-        True: (desempatar(lista)),
-        False: (lista[0])
-    }
-
-    immediate_word = options[len(lista) > 1]
-    return immediate_word
 
 
 def get_previous(lista1, word):
@@ -180,34 +183,6 @@ def get_previous(lista1, word):
     return print("Essa palavra não esta no documento")
 
 
-def get_previous_in_phrase(word, words):
-    """
-    Essa função atribui valores à lista e as dicts de anteriores e posteriores criadas nesta função para
-    que não fossem utiizadas as dicts originais, ou seja, com valores referentes e relacionados à palavra
-    digitada pelo usuário, já que a palavra que deveria ser o parametro dessa vez não é a digitada pelo
-    usuário antes. Depois disso ela realiza a função get_previous para a palavra inicial da frase.
-    :param word: palavra inicial da frase
-    :param words: todas as palavras presentes no texto
-    :return: a função get_previous, ou seja, palavra anterior mais frequente ou mensagem de erro
-    """
-    lista = []
-    previous1 = {}
-    subsequent1 = {}
-    fill_itens(lista, word, words, previous1, subsequent1)
-    check_tie(previous1, subsequent1, lista)
-    lista1, lista2 = check_tie(previous1, subsequent1, lista)
-
-    if word:
-        options = {
-            True: (desempatar(lista1)),
-            False: (lista1[0])
-        }
-
-        immediate_previous = options[len(lista1) > 1]
-        return immediate_previous
-    return print("Essa palavra não esta no documento")
-
-
 def get_subsequent(lista2, word):
     """
     Essa função pega a palavra posterior mais frequente da palavra digitada pelo usuário
@@ -215,34 +190,6 @@ def get_subsequent(lista2, word):
     :param word: palavra digitada pelo usuário
     :return: Mensagem de erro
     """
-    if word:
-        options = {
-            True: (desempatar(lista2)),
-            False: (lista2[0])
-        }
-
-        immediate_subsequent = options[len(lista2) > 1]
-        return immediate_subsequent
-    return print("Essa palavra não esta no documento")
-
-
-def get_subsequent_in_phrase(word, words):
-    """
-    Essa função atribui valores à lista e as dicts de anteriores e posteriores criadas nesta função para
-    que não fossem utiizadas as dicts originais, ou seja, com valores referentes e relacionados à palavra
-    digitada pelo usuário, já que a palavra que deveria ser o parametro dessa vez não é a digitada pelo
-    usuário antes. Depois disso ela realiza a função get_subsequent para a palavra final da frase.
-    :param word: palavra final da frase
-    :param words: todas as palavras presentes no texto
-    :return: a função get_subsequent, ou seja, palavra posterior mais frequente ou mensagem de erro
-    """
-    lista = []
-    previous2 = {}
-    subsequent2 = {}
-    fill_itens(lista, word, words, previous2, subsequent2)
-    check_tie(previous2, subsequent2, lista)
-    lista1, lista2 = check_tie(previous2, subsequent2, lista)
-
     if word:
         options = {
             True: (desempatar(lista2)),

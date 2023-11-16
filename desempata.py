@@ -19,7 +19,7 @@ def check_tie(dict1, dict2, lista):
     subsequent_word_tie = [word for word in dict2 if dict2[word] == dict2[subsequent_word]]
     if len(lista) > 0:
         return previous_word_tie, subsequent_word_tie
-    return print("não tem nenhuma palavra nas listas")
+    return print("não tem inhumane palavra nas listas")
 
 def desempate_anteriores(lista1, lista2, dict1, dict2):
     anteriores_em_comum = []
@@ -62,6 +62,16 @@ def desempate_posteriores(lista1, lista2, dict3, dict4):
         escolha = compare_frequencia_posteriores(result_dict, posteriores_em_comum)
         return escolha
 
+def desempatar(lista):
+    """
+    escolhe um item aleatório da lista
+    :param lista: lista de palavras a serem sorteadas
+    :return: a escolha, ou seja, o item que foi sorteado
+    """
+    escolha = random.choice(lista)
+    return escolha
+
+
 def desempatar2(um, dois):
     """
     escolhe um item aleatorio dentre as 2 opções que forem designadas ao chamar essa função
@@ -72,3 +82,13 @@ def desempatar2(um, dois):
     lista = [um, dois]
     escolha = random.choice(lista)
     return escolha
+
+
+def desempata_lista(lista):
+    options = {
+        True: (desempatar(lista)),
+        False: (lista[0])
+    }
+
+    immediate_word = options[len(lista) > 1]
+    return immediate_word
