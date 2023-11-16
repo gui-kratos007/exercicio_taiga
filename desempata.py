@@ -22,44 +22,44 @@ def check_tie(dict1, dict2, lista):
     return print("não tem nenhuma palavra nas listas")
 
 def desempate_anteriores(lista1, lista2, dict1, dict2):
-    anteriores = []
+    anteriores_em_comum = []
 
     for i, item in enumerate(lista1):
         for j, item2 in enumerate(lista2):
             if item2 == item:
-                anteriores.append(item)
+                anteriores_em_comum.append(item)
 
-    if len(anteriores) == 0:
+    if len(anteriores_em_comum) == 0:
         anteriores = lista1 + lista2
         escolha = random.choice(anteriores)
         return escolha
-    elif len(anteriores) == 1:
-        escolha = anteriores[0]
+    elif len(anteriores_em_comum) == 1:
+        escolha = anteriores_em_comum[0]
         return escolha
     else:
-        result_dict = print_percentage_previous(dict1, dict2)
-        escolha = compare_frequencia_anteriores(result_dict, anteriores)
+        result_dict = put_percentage_previous(dict1, dict2)
+        escolha = compare_frequencia_anteriores(result_dict, anteriores_em_comum)
         return escolha
 
 
 def desempate_posteriores(lista1, lista2, dict3, dict4):
-    posteriores = []
+    posteriores_em_comum = []
 
     for i, item in enumerate(lista1):
         for j, item2 in enumerate(lista2):
             if item2 == item:
-                posteriores.append(item)
+                posteriores_em_comum.append(item)
 
-    if len(posteriores) == 0:
+    if len(posteriores_em_comum) == 0:
         posteriores = lista1 + lista2
         escolha = random.choice(posteriores)
         return escolha
-    elif len(posteriores) > 1:
-        escolha = posteriores[0]
+    elif len(posteriores_em_comum) > 1:
+        escolha = posteriores_em_comum[0]
         return escolha
     else:
-        result_dict = print_percentage_subsequent(dict3, dict4)
-        escolha = compare_frequencia_posteriores(result_dict, posteriores)
+        result_dict = put_percentage_subsequent(dict3, dict4)
+        escolha = compare_frequencia_posteriores(result_dict, posteriores_em_comum)
         return escolha
 
 def desempatar2(um, dois):

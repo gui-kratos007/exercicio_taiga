@@ -1,5 +1,4 @@
 import json
-import random
 from desempata import *
 
 
@@ -14,9 +13,9 @@ def calculate_percentage(ocurrences, total):
     return percentage_value
 
 
-def print_percentage_previous(dict1, dict2):
+def put_percentage_previous(dict1, dict2):
     """
-    imprime as porcentagens de aparições das palavras de cada dict
+    Aloca as porcentagens de aparições das palavras de cada dict
     :param dict1: dicionário das palavras que aparecem antes da escolhida pelo usuário
     :param dict2: dicionário das palavras que aparecem depois da escolhida pelo usuário
     :return: 0, ou seja, indica ao SO que o programa foi bem sucedido
@@ -40,9 +39,9 @@ def print_percentage_previous(dict1, dict2):
     return dict_porcentagem
 
 
-def print_percentage_subsequent(dict3, dict4):
+def put_percentage_subsequent(dict3, dict4):
     """
-    imprime as porcentagens de aparições das palavras de cada dict
+    Aloca as porcentagens de aparições das palavras de cada dict
     :param dict3: dicionário das palavras que aparecem antes da escolhida pelo usuário
     :param dict4: dicionário das palavras que aparecem depois da escolhida pelo usuário
     :return: 0, ou seja, indica ao SO que o programa foi bem sucedido
@@ -67,6 +66,20 @@ def print_percentage_subsequent(dict3, dict4):
 
 
 def porcentagens_anteriores(result, lista):
+    """
+    ele vai pegar as palavras que são comuns nas duas dicts e que estão na lista
+    e vai retornar outras duas dicts separadas contendo suas devidas porcentagens
+    como valores.
+    :param result: é a result_dict decorrente da junção em uma única dict das
+    dicts "anteriores", que são as anteriores à palavra digitada pelo usuário,
+    e "anteriores2", que são as anteriores à primeira palavra da frase.
+    :param lista: lista de palavras que são comuns nas duas dicts
+    :param lista: anteriores em comum, que estão presentes nas duas dicts de
+    anteriores
+    :return: porcentagens 1 e 2, que são respectivamente as dicts das porcentagens
+    das palavras anteriores à palavra digitada pelo usuário, e a das porcentagens
+    das palavras anteriores à primeira palavra da frase.
+    """
     porcentagens1 = {}
     porcentagens2 = {}
     for key, value in result["anteriores"].items():
@@ -83,6 +96,20 @@ def porcentagens_anteriores(result, lista):
 
 
 def porcentagens_posteriores(result, lista):
+    """
+    ele vai pegar as palavras que são comuns nas duas dicts e que estão na lista
+    e vai retornar outras duas dicts separadas contendo suas devidas porcentagens
+    como valores.
+    :param result: é a result_dict decorrente da junção em uma única dict das
+    dicts "posteriores", que são as posteriores à palavra digitada pelo usuário,
+    e "posteriores2", que são as posteriores à primeira palavra da frase.
+    :param lista: lista de palavras que são comuns nas duas dicts
+    :param lista: posteriores em comum, que estão presentes nas duas dicts de
+    posteriores
+    :return: porcentagens 1 e 2, que são respectivamente as dicts das porcentagens
+    das palavras posteriores à palavra digitada pelo usuário, e a das porcentagens
+    das palavras posteriores à última palavra da frase.
+        """
     porcentagens1 = {}
     porcentagens2 = {}
     for key, value in result["posteriores"].items():
@@ -99,6 +126,18 @@ def porcentagens_posteriores(result, lista):
 
 
 def compare_frequencia_anteriores(result, lista):
+    """
+    Acha a palavra de maior frequencia das dicts de porcentagens 1 e 2, afim
+    de comparar entre a palavra de maior frequencia da procentagens 1 e 2 e
+    retornar qual delas é a mais frequente. Nesse caso as porcentagens 1 e 2
+    são equivalentes às anteriores à palavra escolhida e às anteriores à
+    primeira palavra do texto.
+    :param result: é a result_dict decorrente da junção em uma única dict das
+    dicts "anteriores", que são as anteriores à palavra digitada pelo usuário,
+    e "anteriores2", que são as anteriores à primeira palavra da frase.
+    :param lista: lista de palavras que são comuns nas duas dicts
+    :return: retorna a palavra com maior frequencia entre todas
+    """
     porcentagens1, porcentagens2 = porcentagens_anteriores(result, lista)
     valor1 = 0
     valor2 = 0
@@ -127,6 +166,18 @@ def compare_frequencia_anteriores(result, lista):
 
 
 def compare_frequencia_posteriores(result, lista):
+    """
+    Acha a palavra de maior frequencia das dicts de porcentagens 1 e 2, afim
+    de comparar entre a palavra de maior frequencia da porcentagens 1 e 2 e
+    retornar qual delas é a mais frequente. Nesse caso as porcentagens 1 e 2
+    são equivalentes às posteriores à palavra escolhida e às posteriores à
+    última palavra do texto.
+    :param result: é a result_dict decorrente da junção em uma única dict das
+    dicts "posteriores", que são as posteriores à palavra digitada pelo usuário,
+    e "posteriores2", que são as posteriores à primeira palavra da frase.
+    :param lista: lista de palavras que são comuns nas duas dicts
+    :return: retorna a palavra com maior frequencia entre todas
+    """
     porcentagens1, porcentagens2 = porcentagens_posteriores(result, lista)
     valor1 = 0
     valor2 = 0
@@ -162,8 +213,8 @@ def main():
     dict2 = {"a": 4, "b": 5, "c": 4}
     dict3 = {"e": 1, "f": 6, "g": 8, "h": 9}
     dict4 = {"e": 3, "f": 5, "g": 2, "h": 4}
-    result_dict = print_percentage_previous(dict1, dict2)
-    result_dict2 = print_percentage_subsequent(dict3, dict4)
+    result_dict = put_percentage_previous(dict1, dict2)
+    result_dict2 = put_percentage_subsequent(dict3, dict4)
 
     print(result_dict)
     compare_frequencia_anteriores(result_dict, lista)
