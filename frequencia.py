@@ -1,3 +1,13 @@
+"""As dicts de anteriores e anteriores2 já estão definidas aqui, só falta uma função que modifique
+a anteriores, que é a dict de anteriores da palavra escolhida, para que ela va se alterando conforme
+a necessidade, por exemplo:
+o cara quer uma frase com 5 termos. Uma função que eu criei ja faz a primeira parte da frase, que conterá 3 termos.
+A partir dai o programa preciasará pegar a anterior e posterior 2 casas de distancia da palavra no texto de onde ela
+é tirada, então as anteriores à serem usadas para pegar porcentagem de aparição e comparar serão exclusivamente as
+anteriores 2 casas de distancia da palavra no texto. Se ele quisesse uma frase do texto, o procedimento seria feito
+pegando as palavras duas casas anteriores e fazendo o caminho necessário, e depois iria fazer o mesmo com palavras
+anteriores 3 casas, e assim sucessivamente de acordo com a quantidade de termos que o cara escolher.
+"""
 import json
 from desempata import *
 

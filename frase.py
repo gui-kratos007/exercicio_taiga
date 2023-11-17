@@ -122,9 +122,18 @@ def add_itens_in_subsequent_specifics(lista, words, number):
     return subsequent_specifics
 
 
-def get_previous_in_document(lista, words, number):
-    anteriores_especificos = []
-    for i in lista:
+def get_previous_in_document(dict, words, number, list):
+    anteriores_especificos = {}
+    for key, value in dict.items():
+        for i, item in enumerate(words):
+            for j in list:
+                for k in range(4, number):
+                    if key == item and i + k == list[j]:
+                        anteriores_especificos[key] = value
+
+
+
+    """for i in lista:
         print(lista)
         for j, item in enumerate(words):
             for item2, k in range(4, number):
@@ -133,7 +142,7 @@ def get_previous_in_document(lista, words, number):
                     anteriores_especificos.append(item)
                     print(item)
     print(anteriores_especificos)
-    return anteriores_especificos
+    return anteriores_especificos"""
 
 
 def get_subsequent_in_document(lista, words, number):

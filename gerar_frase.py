@@ -233,6 +233,13 @@ def get_previous(lista1, word):
     return print("Essa palavra não esta no documento")
 
 
+while resp == 0:
+    for i in range(1, number -3):
+        for j, item in enumerate(words):
+            for k, item2 in enumerate(lista):
+
+
+
 def get_previous_in_phrase(word, words, number):
     """
     Essa função atribui valores à lista e as dicts de anteriores e posteriores criadas nesta função para
