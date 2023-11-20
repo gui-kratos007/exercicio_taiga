@@ -96,6 +96,50 @@ def add_itens_in_dicts(func, dict1, dict2, word, words):
     return dict1, dict2
 
 
+def add_itens_in_dicts2(func, dict1, dict2, word, words, number):
+    """
+    se existir ao menos 1 item na lista, adiciona esse item na sua respectiva dict e atribui
+     valor a esses itens, que aumenta a medida que ele reaparece na contagem da lista
+    :param func: função que retorna o tamanho da lista
+    :param dict1: dicionário de palavras anteriores, que no início está vazio
+    :param dict2: dicionário de palavras posteriores, que no início está vazio
+    :param word: palavra escolhida pelo usuário
+    :param words: lista de palavras
+    :return: dicionarios de anteriores e posteriores, com os seus respectivos itens e valores,
+    que agora não estará mais vazio, como no início
+    """
+    print(number)
+    if func > 0:
+        dict1[f"anteriores de distancia {number}"] = {}
+        dict2[f"posteriores de distancia {number}"] = {}
+        # Conta a frequencia das palavras anteriores e posteriores
+        for j, item in enumerate(words):
+            if item == word:
+                if words[j] == words[0]:
+                    previous_word = words[-1]
+                else:
+                    previous_word = words[j - number]
+                if words[j] == words[-1]:
+                    subsequent_word = words[0]
+                else:
+                    subsequent_word = words[j + number]
+
+                # Se a palavra já estiver no dict das anteriores, adiciona mais 1 ao seu valor
+                if previous_word in dict1[f"anteriores de distancia {number}"]:
+                    dict1[f"anteriores de distancia {number}"][previous_word] += 1
+                # Se a palavra não estiver no dict das anteriores, adiciona ela e coloque seu valor como 1.
+                else:
+                    dict1[f"anteriores de distancia {number}"][previous_word] = 1
+
+                # Se a palavra já estiver no dict das posteriores, adiciona mais 1 ao seu valor
+                if subsequent_word in dict2[f"posteriores de distancia {number}"]:
+                    dict2[f"posteriores de distancia {number}"][subsequent_word] += 1
+                # Se a palavra não estiver no dict das posteriores, adiciona ela e coloque seu valor como 1.
+                else:
+                    dict2[f"posteriores de distancia {number}"][subsequent_word] = 1
+    return dict1, dict2
+
+
 def add_itens_in_previous_specifics(lista, words, number):
     previous_specifics = {}
     anteriores_especificos = get_previous_in_document(lista, words, number)
@@ -159,7 +203,7 @@ def get_subsequent_in_document(lista, words, number):
     return posteriores_especificos
 
 
-def fill_itens(lista, word, words, dict1, dict2):
+def fill_itens(lista, word, words, dict1, dict2, dict3, dict4, number):
     """
     Preenche automaticamente as listas e os dicts de acordo com a palavra em análise
     :param lista: lista de índices da palavra em análise
@@ -171,6 +215,7 @@ def fill_itens(lista, word, words, dict1, dict2):
     """
     list_add = add_in_list(lista, word, words)
     add_itens_in_dicts(list_add, dict1, dict2, word, words)
+    #  add_itens_in_dicts2(list_add, dict3, dict4, word, words, number)
     return list_add
 
 
@@ -290,11 +335,18 @@ def generate_sentence(word, style, number):
     """
     lista_de_busca = []
     previous = {}
+    previous2 = {}
     subsequent = {}
+    subsequent2 = {}
     words = list_the_words(style)
     if word in words:
-        fill_itens(lista_de_busca, word, words, previous, subsequent)
+        num_list = fill_itens(lista_de_busca, word, words, previous, subsequent, previous2, subsequent2, number)
+        for i, n in enumerate(range(2, number + 1)):
+            add_itens_in_dicts2(num_list, previous2, subsequent2, word, words, n)
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
+        lista3, lista4 = check_tie(previous2, subsequent2, lista_de_busca)
+        print(lista3)
+        print(lista4)
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:

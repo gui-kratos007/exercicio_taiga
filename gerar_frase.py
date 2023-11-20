@@ -135,6 +135,17 @@ def get_previous_in_document(lista, words, number):
     return anteriores_especificos
 
 
+num = 4
+for i, item in range(4, number):
+    #  aqui embaixo é a função
+    anteriores_especificos = []
+    for j in lista:
+        for k, item2 in enumerate(words):
+            if k + item == j:
+                anteriores_especificos.append(item)
+    return anteriores_especificos
+
+
 def get_subsequent_in_document(lista, words, number):
     posteriores_especificos = []
     for i in lista:
