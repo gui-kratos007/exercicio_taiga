@@ -11,7 +11,6 @@ def check_tie(dict1, dict2, lista):
     """
     # Encontra a(s) palavra(s) mais frequente(s)
     previous_word = max(dict1, key=lambda k: dict1[k])
-    print(f"Palavra anterior com mais aparições: {previous_word}")
     subsequent_word = max(dict2, key=lambda k: dict2[k])
 
     # Verifica se há empate de palavras mais frequentes

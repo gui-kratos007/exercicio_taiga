@@ -108,10 +108,9 @@ def add_itens_in_dicts2(func, dict1, dict2, word, words, number):
     :return: dicionarios de anteriores e posteriores, com os seus respectivos itens e valores,
     que agora não estará mais vazio, como no início
     """
-    print(number)
     if func > 0:
-        dict1[f"anteriores de distancia {number}"] = {}
-        dict2[f"posteriores de distancia {number}"] = {}
+        dict1[f"distancia {number}"] = {}
+        dict2[f"distancia {number}"] = {}
         # Conta a frequencia das palavras anteriores e posteriores
         for j, item in enumerate(words):
             if item == word:
@@ -125,18 +124,18 @@ def add_itens_in_dicts2(func, dict1, dict2, word, words, number):
                     subsequent_word = words[j + number]
 
                 # Se a palavra já estiver no dict das anteriores, adiciona mais 1 ao seu valor
-                if previous_word in dict1[f"anteriores de distancia {number}"]:
-                    dict1[f"anteriores de distancia {number}"][previous_word] += 1
+                if previous_word in dict1[f"distancia {number}"]:
+                    dict1[f"distancia {number}"][previous_word] += 1
                 # Se a palavra não estiver no dict das anteriores, adiciona ela e coloque seu valor como 1.
                 else:
-                    dict1[f"anteriores de distancia {number}"][previous_word] = 1
+                    dict1[f"distancia {number}"][previous_word] = 1
 
                 # Se a palavra já estiver no dict das posteriores, adiciona mais 1 ao seu valor
-                if subsequent_word in dict2[f"posteriores de distancia {number}"]:
-                    dict2[f"posteriores de distancia {number}"][subsequent_word] += 1
+                if subsequent_word in dict2[f"distancia {number}"]:
+                    dict2[f"distancia {number}"][subsequent_word] += 1
                 # Se a palavra não estiver no dict das posteriores, adiciona ela e coloque seu valor como 1.
                 else:
-                    dict2[f"posteriores de distancia {number}"][subsequent_word] = 1
+                    dict2[f"distancia {number}"][subsequent_word] = 1
     return dict1, dict2
 
 
@@ -301,8 +300,8 @@ def phrases(frase, words, number):
             palavras = frase.split()
             palavra_inicial = palavras[0]
             palavra_final = palavras[-1]
-            anterior = get_previous_in_phrase(palavra_inicial, words)
-            posterior = get_subsequent_in_phrase(palavra_final, words)
+            anterior = desempate_anteriores()
+            posterior = desempate_posteriores()
             if (number - len(palavras)) % 2 == 0:
                 nova_frase = f"{anterior} {frase} {posterior}"
             else:
@@ -321,6 +320,32 @@ def phrases(frase, words, number):
                 print("Digite um valor inteiro positivo")
         resp = 1
     return frase
+
+
+def dict_most_frequents(dict1, dict2, number, lista):
+    most_frequents_previous = {}
+    most_frequents_subsequent = {}
+    for i, n in enumerate(range(2, number + 1)):
+        most_frequents_previous[f"distancia {n}"] = {}
+        most_frequents_subsequent[f"distancia {n}"] = {}
+        lista3, lista4 = check_tie(dict1[f"distancia {n}"],
+                                   dict2[f"distancia {n}"], lista)
+        """print("anteriores")
+        print(lista3)
+        print("posteriores")
+        print(lista4)"""
+        for j, item in enumerate(lista3):
+            for key, value in dict1[f"distancia {n}"].items():
+                if key == item:
+                    most_frequents_previous[f"distancia {n}"][key] = value
+        for j, item in enumerate(lista4):
+            for key, value in dict2[f"distancia {n}"].items():
+                if key == item:
+                    most_frequents_subsequent[f"distancia {n}"][key] = value
+
+    print(most_frequents_previous)
+    print(most_frequents_subsequent)
+    return most_frequents_previous, most_frequents_subsequent
 
 
 def generate_sentence(word, style, number):
@@ -343,10 +368,13 @@ def generate_sentence(word, style, number):
         num_list = fill_itens(lista_de_busca, word, words, previous, subsequent, previous2, subsequent2, number)
         for i, n in enumerate(range(2, number + 1)):
             add_itens_in_dicts2(num_list, previous2, subsequent2, word, words, n)
+        print(previous2)
+        print(subsequent2)
+        print("TEste+")
+        most_frequent_previous, most_frequent_subsequent = dict_most_frequents(previous2, subsequent2,
+                                                                               number, lista_de_busca)
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
-        lista3, lista4 = check_tie(previous2, subsequent2, lista_de_busca)
-        print(lista3)
-        print(lista4)
+        print(previous)
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:
