@@ -284,7 +284,7 @@ def make_phrase(lista1, lista2, word, number):
         return frase
 
 
-def phrases(frase, words, number):
+def phrases(frase, number, dict1, dict2, dict3, dict4):
     """
       Essa função imprime as frases mais provaveis de acordo com a frequencia das palavras. O usuário pode continuar
       o programa e formar frases maiores de acordo com a sua vontade
@@ -300,8 +300,8 @@ def phrases(frase, words, number):
             palavras = frase.split()
             palavra_inicial = palavras[0]
             palavra_final = palavras[-1]
-            anterior = desempate_anteriores()
-            posterior = desempate_posteriores()
+            anterior = desempate_anteriores(dict1, dict2, number)
+            posterior = desempate_posteriores(dict3, dict4, number)
             if (number - len(palavras)) % 2 == 0:
                 nova_frase = f"{anterior} {frase} {posterior}"
             else:
@@ -325,11 +325,11 @@ def phrases(frase, words, number):
 def dict_most_frequents(dict1, dict2, number, lista):
     most_frequents_previous = {}
     most_frequents_subsequent = {}
-    for i, n in enumerate(range(2, number + 1)):
+    metade = number // 2
+    for n in range(2, metade + 1):
         most_frequents_previous[f"distancia {n}"] = {}
         most_frequents_subsequent[f"distancia {n}"] = {}
-        lista3, lista4 = check_tie(dict1[f"distancia {n}"],
-                                   dict2[f"distancia {n}"], lista)
+        lista3, lista4 = check_tie(dict1[f"distancia {n}"], dict2[f"distancia {n}"], lista)
         """print("anteriores")
         print(lista3)
         print("posteriores")
@@ -363,10 +363,11 @@ def generate_sentence(word, style, number):
     previous2 = {}
     subsequent = {}
     subsequent2 = {}
+    metade = number // 2
     words = list_the_words(style)
     if word in words:
         num_list = fill_itens(lista_de_busca, word, words, previous, subsequent, previous2, subsequent2, number)
-        for i, n in enumerate(range(2, number + 1)):
+        for n in range(2, metade + 1):
             add_itens_in_dicts2(num_list, previous2, subsequent2, word, words, n)
         print(previous2)
         print(subsequent2)
@@ -378,11 +379,11 @@ def generate_sentence(word, style, number):
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:
-            nova_frase = phrases(frase, words, number)
+            nova_frase = phrases(frase, number, previous, previous2, subsequent, subsequent2)
             return print(nova_frase)
         return print(frase)
     return print("A palavra que você buscou não está no documento lido.")
 
 
 if __name__ == "__main__":
-    generate_sentence("essa", "cientifico", 4)
+    generate_sentence("essa", "cientifico", 6)

@@ -20,8 +20,34 @@ def check_tie(dict1, dict2, lista):
         return previous_word_tie, subsequent_word_tie
     return print("não tem inhumane palavra nas listas")
 
-def desempate_anteriores(lista1, lista2, dict1, dict2):
-    anteriores_em_comum = []
+
+def desempate_anteriores(dict1, dict2, number):
+    anteriores_em_comum = {}
+    anteriores_total = []
+    metade = number // 2
+
+    for i, n in enumerate(range(2, metade + 1)):
+        for key, value in dict1:
+            for key2, value2 in dict2[f"distancia {n}"]:
+                if key == key2:
+                    anteriores_em_comum[key] = value + value2
+
+    if len(anteriores_em_comum) == 0:
+        for key, value in dict1:
+            anteriores_total.append(key)
+        for key, value in dict2.items():
+            anteriores_total.append(key)
+    elif len(anteriores_em_comum) == 1:
+        for key, value in dict1:
+            escolha = anteriores_em_comum[key]
+            return escolha
+    else:
+        result_dict = put_percentage_previous(dict1, dict2)
+        escolha = compare_frequencia_anteriores(result_dict, anteriores_em_comum)
+        return escolha
+
+
+    """anteriores_em_comum = []
 
     for i, item in enumerate(lista1):
         for j, item2 in enumerate(lista2):
@@ -38,24 +64,29 @@ def desempate_anteriores(lista1, lista2, dict1, dict2):
     else:
         result_dict = put_percentage_previous(dict1, dict2)
         escolha = compare_frequencia_anteriores(result_dict, anteriores_em_comum)
-        return escolha
+        return escolha"""
 
 
-def desempate_posteriores(lista1, lista2, dict3, dict4):
-    posteriores_em_comum = []
+def desempate_posteriores(dict3, dict4, number):
+    posteriores_em_comum = {}
+    posteriores_total = []
+    metade = number // 2
 
-    for i, item in enumerate(lista1):
-        for j, item2 in enumerate(lista2):
-            if item2 == item:
-                posteriores_em_comum.append(item)
+    for i, n in enumerate(range(2, metade + 1)):
+        for key, value in dict3:
+            for key2, value2 in dict4[f"distancia {n}"]:
+                if key == key2:
+                    posteriores_em_comum[key] = value + value2
 
     if len(posteriores_em_comum) == 0:
-        posteriores = lista1 + lista2
-        escolha = random.choice(posteriores)
-        return escolha
-    elif len(posteriores_em_comum) > 1:
-        escolha = posteriores_em_comum[0]
-        return escolha
+        for key, value in dict3:
+            posteriores_total.append(key)
+        for key, value in dict4.items():
+            posteriores_total.append(key)
+    elif len(posteriores_em_comum) == 1:
+        for key, value in dict3:
+            escolha = posteriores_em_comum[key]
+            return escolha
     else:
         result_dict = put_percentage_subsequent(dict3, dict4)
         escolha = compare_frequencia_posteriores(result_dict, posteriores_em_comum)
