@@ -23,7 +23,7 @@ def calculate_percentage(ocurrences, total):
     return percentage_value
 
 
-def put_percentage_previous(dict1, dict2):
+def put_percentage_previous(dict1):
     """
     Aloca as porcentagens de aparições das palavras de cada dict
     :param dict1: dicionário das palavras que aparecem antes da escolhida pelo usuário
@@ -32,20 +32,13 @@ def put_percentage_previous(dict1, dict2):
     """
     dict_porcentagem = {}
     dict_porcentagem["anteriores"] = {}
-    dict_porcentagem["anteriores2"] = {}
     total_itens = sum(dict1.values())
-    total_itens2 = sum(dict2.values())
 
     for item in dict1:
         ocurrences = dict1.get(item, 0)
         percentage_value = calculate_percentage(ocurrences, total_itens)
         #  print(item, "(", percentage_value, "%) \n")
         dict_porcentagem["anteriores"][item] = percentage_value
-    for item in dict2:
-        ocurrences = dict2.get(item, 0)
-        percentage_value = calculate_percentage(ocurrences, total_itens2)
-        #  print(item, "(", percentage_value, "%) \n")
-        dict_porcentagem["anteriores2"][item] = percentage_value
     return dict_porcentagem
 
 
@@ -58,20 +51,13 @@ def put_percentage_subsequent(dict3, dict4):
     """
     dict_porcentagem = {}
     dict_porcentagem["posteriores"] = {}
-    dict_porcentagem["posteriores2"] = {}
     total_itens = sum(dict3.values())
-    total_itens2 = sum(dict4.values())
 
     for item in dict3:
         ocurrences = dict3.get(item, 0)
         percentage_value = calculate_percentage(ocurrences, total_itens)
         #  print(item, "(", percentage_value, "%) \n")
         dict_porcentagem["posteriores"][item] = percentage_value
-    for item in dict4:
-        ocurrences = dict4.get(item, 0)
-        percentage_value = calculate_percentage(ocurrences, total_itens2)
-        #  print(item, "(", percentage_value, "%) \n")
-        dict_porcentagem["posteriores2"][item] = percentage_value
     return dict_porcentagem
 
 
@@ -97,11 +83,6 @@ def porcentagens_anteriores(result, lista):
             if key == item:
                 porcentagens1[key] = value
 
-    for key, value in result["anteriores2"].items():
-        for item in lista:
-            if key == item:
-                porcentagens2[key] = value
-
     return porcentagens1, porcentagens2
 
 
@@ -126,11 +107,6 @@ def porcentagens_posteriores(result, lista):
         for item in lista:
             if key == item:
                 porcentagens1[key] = value
-
-    for key, value in result["posteriores2"].items():
-        for item in lista:
-            if key == item:
-                porcentagens2[key] = value
 
     return porcentagens1, porcentagens2
 

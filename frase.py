@@ -202,7 +202,7 @@ def get_subsequent_in_document(lista, words, number):
     return posteriores_especificos
 
 
-def fill_itens(lista, word, words, dict1, dict2, dict3, dict4, number):
+def fill_itens(lista, word, words, dict1, dict2):
     """
     Preenche automaticamente as listas e os dicts de acordo com a palavra em análise
     :param lista: lista de índices da palavra em análise
@@ -284,7 +284,7 @@ def make_phrase(lista1, lista2, word, number):
         return frase
 
 
-def phrases(frase, number, dict1, dict2, dict3, dict4):
+def phrases(frase, number, words, dict2, dict4):
     """
       Essa função imprime as frases mais provaveis de acordo com a frequencia das palavras. O usuário pode continuar
       o programa e formar frases maiores de acordo com a sua vontade
@@ -300,8 +300,8 @@ def phrases(frase, number, dict1, dict2, dict3, dict4):
             palavras = frase.split()
             palavra_inicial = palavras[0]
             palavra_final = palavras[-1]
-            anterior = desempate_anteriores(dict1, dict2, number)
-            posterior = desempate_posteriores(dict3, dict4, number)
+            anterior = desempate_anteriores(palavra_inicial, dict2, number, words)
+            posterior = desempate_posteriores(palavra_final, dict4, number, words)
             if (number - len(palavras)) % 2 == 0:
                 nova_frase = f"{anterior} {frase} {posterior}"
             else:
@@ -366,7 +366,7 @@ def generate_sentence(word, style, number):
     metade = number // 2
     words = list_the_words(style)
     if word in words:
-        num_list = fill_itens(lista_de_busca, word, words, previous, subsequent, previous2, subsequent2, number)
+        num_list = fill_itens(lista_de_busca, word, words, previous, subsequent)
         for n in range(2, metade + 1):
             add_itens_in_dicts2(num_list, previous2, subsequent2, word, words, n)
         print(previous2)
@@ -379,7 +379,7 @@ def generate_sentence(word, style, number):
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:
-            nova_frase = phrases(frase, number, previous, previous2, subsequent, subsequent2)
+            nova_frase = phrases(frase, number, words, previous2, subsequent2)
             return print(nova_frase)
         return print(frase)
     return print("A palavra que você buscou não está no documento lido.")

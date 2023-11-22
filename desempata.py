@@ -1,5 +1,6 @@
 import random
 from frequencia import *
+from frase import *
 
 def check_tie(dict1, dict2, lista):
     """
@@ -21,28 +22,34 @@ def check_tie(dict1, dict2, lista):
     return print("não tem inhumane palavra nas listas")
 
 
-def desempate_anteriores(dict1, dict2, number):
+def desempate_anteriores(word, dict2, number, words):
     anteriores_em_comum = {}
-    anteriores_total = []
+    anteriores_total = {}
     metade = number // 2
+    lista = []
+    previous1 = {}
+    subsequent1 = {}
+    fill_itens(lista, word, words, previous1, subsequent1)
+    anteriores_total.update(previous1)
+    for i, n in enumerate(range(2, metade + 1)):
+        anteriores_total.update(dict2[f"distancia {n}"].items())
 
     for i, n in enumerate(range(2, metade + 1)):
-        for key, value in dict1:
-            for key2, value2 in dict2[f"distancia {n}"]:
+        for key, value in previous1.items():
+            for key2, value2 in dict2[f"distancia {n}"].items():
                 if key == key2:
                     anteriores_em_comum[key] = value + value2
 
     if len(anteriores_em_comum) == 0:
-        for key, value in dict1:
-            anteriores_total.append(key)
-        for key, value in dict2.items():
-            anteriores_total.append(key)
+        result_dict = put_percentage_previous(anteriores_total)
+        escolha = compare_frequencia_anteriores(result_dict, anteriores_total)
+        return escolha
     elif len(anteriores_em_comum) == 1:
-        for key, value in dict1:
-            escolha = anteriores_em_comum[key]
+        for key, value in anteriores_em_comum.items():
+            escolha = key
             return escolha
     else:
-        result_dict = put_percentage_previous(dict1, dict2)
+        result_dict = put_percentage_previous(anteriores_em_comum)
         escolha = compare_frequencia_anteriores(result_dict, anteriores_em_comum)
         return escolha
 
@@ -67,28 +74,33 @@ def desempate_anteriores(dict1, dict2, number):
         return escolha"""
 
 
-def desempate_posteriores(dict3, dict4, number):
+def desempate_posteriores(word, dict4, number, words):
     posteriores_em_comum = {}
-    posteriores_total = []
+    posteriores_total = {}
     metade = number // 2
+    lista = []
+    previous1 = {}
+    subsequent1 = {}
+    fill_itens(lista, word, words, previous1, subsequent1)
 
     for i, n in enumerate(range(2, metade + 1)):
-        for key, value in dict3:
-            for key2, value2 in dict4[f"distancia {n}"]:
+        for key, value in subsequent1.items():
+            for key2, value2 in dict4[f"distancia {n}"].items():
                 if key == key2:
                     posteriores_em_comum[key] = value + value2
 
     if len(posteriores_em_comum) == 0:
-        for key, value in dict3:
-            posteriores_total.append(key)
-        for key, value in dict4.items():
-            posteriores_total.append(key)
+        posteriores_total.update(subsequent1)
+        posteriores_total.update(dict4)
+        result_dict = put_percentage_subsequent(subsequent1, dict4)
+        escolha = compare_frequencia_posteriores(result_dict, posteriores_total)
+        return escolha
     elif len(posteriores_em_comum) == 1:
-        for key, value in dict3:
-            escolha = posteriores_em_comum[key]
+        for key, value in posteriores_em_comum.items():
+            escolha = key
             return escolha
     else:
-        result_dict = put_percentage_subsequent(dict3, dict4)
+        result_dict = put_percentage_subsequent(subsequent1, dict4)
         escolha = compare_frequencia_posteriores(result_dict, posteriores_em_comum)
         return escolha
 
