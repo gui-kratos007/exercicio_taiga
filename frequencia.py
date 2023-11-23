@@ -8,8 +8,7 @@ anteriores 2 casas de distancia da palavra no texto. Se ele quisesse uma frase d
 pegando as palavras duas casas anteriores e fazendo o caminho necessário, e depois iria fazer o mesmo com palavras
 anteriores 3 casas, e assim sucessivamente de acordo com a quantidade de termos que o cara escolher.
 """
-import json
-from desempata import *
+from configs import *
 
 
 def calculate_percentage(ocurrences, total):
@@ -27,7 +26,6 @@ def put_percentage_previous(dict1):
     """
     Aloca as porcentagens de aparições das palavras de cada dict
     :param dict1: dicionário das palavras que aparecem antes da escolhida pelo usuário
-    :param dict2: dicionário das palavras que aparecem depois da escolhida pelo usuário
     :return: 0, ou seja, indica ao SO que o programa foi bem sucedido
     """
     dict_porcentagem = {}
@@ -42,11 +40,10 @@ def put_percentage_previous(dict1):
     return dict_porcentagem
 
 
-def put_percentage_subsequent(dict3, dict4):
+def put_percentage_subsequent(dict3):
     """
     Aloca as porcentagens de aparições das palavras de cada dict
     :param dict3: dicionário das palavras que aparecem antes da escolhida pelo usuário
-    :param dict4: dicionário das palavras que aparecem depois da escolhida pelo usuário
     :return: 0, ou seja, indica ao SO que o programa foi bem sucedido
     """
     dict_porcentagem = {}
@@ -76,14 +73,13 @@ def porcentagens_anteriores(result, lista):
     das palavras anteriores à palavra digitada pelo usuário, e a das porcentagens
     das palavras anteriores à primeira palavra da frase.
     """
-    porcentagens1 = {}
-    porcentagens2 = {}
+    porcentagens = {}
     for key, value in result["anteriores"].items():
         for item in lista:
             if key == item:
-                porcentagens1[key] = value
+                porcentagens[key] = value
 
-    return porcentagens1, porcentagens2
+    return porcentagens
 
 
 def porcentagens_posteriores(result, lista):
@@ -101,14 +97,13 @@ def porcentagens_posteriores(result, lista):
     das palavras posteriores à palavra digitada pelo usuário, e a das porcentagens
     das palavras posteriores à última palavra da frase.
         """
-    porcentagens1 = {}
-    porcentagens2 = {}
+    porcentagens = {}
     for key, value in result["posteriores"].items():
         for item in lista:
             if key == item:
-                porcentagens1[key] = value
+                porcentagens[key] = value
 
-    return porcentagens1, porcentagens2
+    return porcentagens
 
 
 def compare_frequencia_anteriores(result, lista):
@@ -124,29 +119,17 @@ def compare_frequencia_anteriores(result, lista):
     :param lista: lista de palavras que são comuns nas duas dicts
     :return: retorna a palavra com maior frequencia entre todas
     """
-    porcentagens1, porcentagens2 = porcentagens_anteriores(result, lista)
-    valor1 = 0
-    valor2 = 0
-    resultado1 = ""
-    resultado2 = ""
-    for key, value in porcentagens1.items():
-        if value > valor1:
-            valor1 = value
-            resultado1 = key
-
-    for key, value in porcentagens2.items():
-        if value > valor2:
-            valor2 = value
-            resultado2 = key
-
-    if valor1 == valor2:
-        resultado = desempatar2(resultado1, resultado2)
-    elif valor1 > valor2:
-        resultado = resultado1
-    else:
-        resultado = resultado2
-    print(porcentagens1)
-    print(porcentagens2)
+    porcentagens = porcentagens_anteriores(result, lista)
+    valor = 0
+    resultado = ""
+    for key, value in porcentagens.items():
+        if value > valor:
+            valor = value
+            resultado = key
+        elif value == valor:
+            desempate = desempatar2(resultado, key)
+            resultado = desempate
+    print(porcentagens)
     print(resultado)
     return resultado
 
@@ -164,43 +147,29 @@ def compare_frequencia_posteriores(result, lista):
     :param lista: lista de palavras que são comuns nas duas dicts
     :return: retorna a palavra com maior frequencia entre todas
     """
-    porcentagens1, porcentagens2 = porcentagens_posteriores(result, lista)
-    valor1 = 0
-    valor2 = 0
-    resultado1 = ""
-    resultado2 = ""
-    for key, value in porcentagens1.items():
-        if value > valor1:
-            valor1 = value
-            resultado1 = key
-
-    for key, value in porcentagens2.items():
-        if value > valor2:
-            valor2 = value
-            resultado2 = key
-
-    if valor1 == valor2:
-        resultado = desempatar2(resultado1, resultado2)
-    elif valor1 > valor2:
-        resultado = resultado1
-    else:
-        resultado = resultado2
-    print(porcentagens1)
-    print(porcentagens2)
-    print(resultado)
+    porcentagens = porcentagens_posteriores(result, lista)
+    valor = 0
+    resultado = ""
+    for key, value in porcentagens.items():
+        if value > valor:
+            valor = value
+            resultado = key
+        elif value == valor:
+            desempate = desempatar2(resultado, key)
+            resultado = desempate
     return resultado
 
 
 
-def main():
+def main_teste():
     lista = ["a", "b", "c"]
     lista2 = ["e", "f", "g"]
     dict1 = {"a": 3, "b": 5, "c": 7, "d": 4}
     dict2 = {"a": 4, "b": 5, "c": 4}
     dict3 = {"e": 1, "f": 6, "g": 8, "h": 9}
     dict4 = {"e": 3, "f": 5, "g": 2, "h": 4}
-    result_dict = put_percentage_previous(dict1, dict2)
-    result_dict2 = put_percentage_subsequent(dict3, dict4)
+    result_dict = put_percentage_previous(dict1)
+    result_dict2 = put_percentage_subsequent(dict3)
 
     print(result_dict)
     compare_frequencia_anteriores(result_dict, lista)
@@ -209,4 +178,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main_teste()

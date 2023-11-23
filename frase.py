@@ -1,221 +1,5 @@
-import random
-from carregar_arquivo import load_file
 from desempata import *
-
-def text_clean(text):
-    """
-    Limpa o texto e garante a similaridade das palavras.
-    :return text: Texto limpo e corrigido.
-    """
-    return (text.replace(",", "")
-            .replace(".", "")
-            .lower()
-            )
-
-
-def list_the_words(style):
-    """
-    lê o texto e retorna a lista de palavras dele
-    :param style: caminho do arquivo (sem o .txt)
-    :return: lista de palavras do texro
-    """
-    text = load_file(style)
-    list_words = text_clean(text).split()
-    return list_words
-
-
-def search_word(txt):
-    """
-    Pesquisa a palavra escolhida pelo usuário e retorna uma lista com os indices de todas
-    as aparições dessa palavra no texto
-    :param txt: texto do documento
-    :return: mensagem de erro
-    """
-    word = input("digite a palavra que quer pesquisar: ")
-    lista_de_busca = []
-    for i, item in enumerate(text_clean(txt).split()):
-        if item == word:
-            lista_de_busca.append(i)
-    if len(lista_de_busca) > 0:
-        return lista_de_busca
-    return "essa palavra não está no texto"
-
-
-def add_in_list(lista, word, words):
-    """
-    adiciona itens em uma lista se esse item for igual a palavra escolhida pelo usuário.
-    :param lista: lista em que os itens serão adicionados
-    :param word: palavra escolhida pelo usuário
-    :param words: lista de palavras do documento
-    :return: tamanho da lista
-    """
-    for i, item in enumerate(words):
-        if item == word:
-            lista.append(i)
-    return len(lista)
-
-
-def add_itens_in_dicts(func, dict1, dict2, word, words):
-    """
-    se existir ao menos 1 item na lista, adiciona esse item na sua respectiva dict e atribui
-     valor a esses itens, que aumenta a medida que ele reaparece na contagem da lista
-    :param func: função que retorna o tamanho da lista
-    :param dict1: dicionário de palavras anteriores, que no início está vazio
-    :param dict2: dicionário de palavras posteriores, que no início está vazio
-    :param word: palavra escolhida pelo usuário
-    :param words: lista de palavras
-    :return: dicionarios de anteriores e posteriores, com os seus respectivos itens e valores,
-    que agora não estará mais vazio, como no início
-    """
-    if func > 0:
-        # Conta a frequencia das palavras anteriores e posteriores
-        for j, item in enumerate(words):
-            if item == word:
-                if words[j] == words[0]:
-                    previous_word = words[-1]
-                else:
-                    previous_word = words[j - 1]
-                if words[j] == words[-1]:
-                    subsequent_word = words[0]
-                else:
-                    subsequent_word = words[j + 1]
-
-                # Se a palavra já estiver no dict das anteriores, adiciona mais 1 ao seu valor
-                if previous_word in dict1:
-                    dict1[previous_word] += 1
-                # Se a palavra não estiver no dict das anteriores, adiciona ela e coloque seu valor como 1.
-                else:
-                    dict1[previous_word] = 1
-
-                # Se a palavra já estiver no dict das posteriores, adiciona mais 1 ao seu valor
-                if subsequent_word in dict2:
-                    dict2[subsequent_word] += 1
-                # Se a palavra não estiver no dict das posteriores, adiciona ela e coloque seu valor como 1.
-                else:
-                    dict2[subsequent_word] = 1
-    return dict1, dict2
-
-
-def add_itens_in_dicts2(func, dict1, dict2, word, words, number):
-    """
-    se existir ao menos 1 item na lista, adiciona esse item na sua respectiva dict e atribui
-     valor a esses itens, que aumenta a medida que ele reaparece na contagem da lista
-    :param func: função que retorna o tamanho da lista
-    :param dict1: dicionário de palavras anteriores, que no início está vazio
-    :param dict2: dicionário de palavras posteriores, que no início está vazio
-    :param word: palavra escolhida pelo usuário
-    :param words: lista de palavras
-    :return: dicionarios de anteriores e posteriores, com os seus respectivos itens e valores,
-    que agora não estará mais vazio, como no início
-    """
-    if func > 0:
-        dict1[f"distancia {number}"] = {}
-        dict2[f"distancia {number}"] = {}
-        # Conta a frequencia das palavras anteriores e posteriores
-        for j, item in enumerate(words):
-            if item == word:
-                if words[j] == words[0]:
-                    previous_word = words[-1]
-                else:
-                    previous_word = words[j - number]
-                if words[j] == words[-1]:
-                    subsequent_word = words[0]
-                else:
-                    subsequent_word = words[j + number]
-
-                # Se a palavra já estiver no dict das anteriores, adiciona mais 1 ao seu valor
-                if previous_word in dict1[f"distancia {number}"]:
-                    dict1[f"distancia {number}"][previous_word] += 1
-                # Se a palavra não estiver no dict das anteriores, adiciona ela e coloque seu valor como 1.
-                else:
-                    dict1[f"distancia {number}"][previous_word] = 1
-
-                # Se a palavra já estiver no dict das posteriores, adiciona mais 1 ao seu valor
-                if subsequent_word in dict2[f"distancia {number}"]:
-                    dict2[f"distancia {number}"][subsequent_word] += 1
-                # Se a palavra não estiver no dict das posteriores, adiciona ela e coloque seu valor como 1.
-                else:
-                    dict2[f"distancia {number}"][subsequent_word] = 1
-    return dict1, dict2
-
-
-def add_itens_in_previous_specifics(lista, words, number):
-    previous_specifics = {}
-    anteriores_especificos = get_previous_in_document(lista, words, number)
-
-    for i, item in enumerate(anteriores_especificos):
-        if item in previous_specifics:
-            previous_specifics[item] += 1
-        else:
-            previous_specifics[item] = 1
-    print(previous_specifics)
-    return previous_specifics
-
-
-def add_itens_in_subsequent_specifics(lista, words, number):
-    subsequent_specifics = {}
-    posteriores_especificos = get_subsequent_in_document(lista, words, number)
-
-    for i, item in enumerate(posteriores_especificos):
-        if item in subsequent_specifics:
-            subsequent_specifics[item] += 1
-        else:
-            subsequent_specifics[item] = 1
-    print(f"posteriores especificos: {subsequent_specifics}")
-    return subsequent_specifics
-
-
-def get_previous_in_document(dict, words, number, list):
-    anteriores_especificos = {}
-    for key, value in dict.items():
-        for i, item in enumerate(words):
-            for j in list:
-                for k in range(4, number):
-                    if key == item and i + k == list[j]:
-                        anteriores_especificos[key] = value
-
-
-
-    """for i in lista:
-        print(lista)
-        for j, item in enumerate(words):
-            for item2, k in range(4, number):
-                #  esse if ta errado
-                if j + item2 == i:
-                    anteriores_especificos.append(item)
-                    print(item)
-    print(anteriores_especificos)
-    return anteriores_especificos"""
-
-
-def get_subsequent_in_document(lista, words, number):
-    posteriores_especificos = []
-    for i in lista:
-        print(lista)
-        for j, item in enumerate(words):
-            for k, item2 in range(4, number):
-                if j - item2 == i:
-
-                    posteriores_especificos.append(item)
-                    print(item)
-    print(posteriores_especificos)
-    return posteriores_especificos
-
-
-def fill_itens(lista, word, words, dict1, dict2):
-    """
-    Preenche automaticamente as listas e os dicts de acordo com a palavra em análise
-    :param lista: lista de índices da palavra em análise
-    :param word: palavra em análise
-    :param words: todas as palavras do texto
-    :param dict1: lista de palavras anteriores à palavra em análise
-    :param dict2: lista de palavras posteriores à palavra em análise
-    :return: ela preenche as listas e os dicts
-    """
-    list_add = add_in_list(lista, word, words)
-    add_itens_in_dicts(list_add, dict1, dict2, word, words)
-    #  add_itens_in_dicts2(list_add, dict3, dict4, word, words, number)
-    return list_add
+from configs import *
 
 
 def get_previous(lista1, word):
@@ -323,6 +107,14 @@ def phrases(frase, number, words, dict2, dict4):
 
 
 def dict_most_frequents(dict1, dict2, number, lista):
+    """
+
+    :param dict1:
+    :param dict2:
+    :param number:
+    :param lista:
+    :return:
+    """
     most_frequents_previous = {}
     most_frequents_subsequent = {}
     metade = number // 2
@@ -369,13 +161,7 @@ def generate_sentence(word, style, number):
         num_list = fill_itens(lista_de_busca, word, words, previous, subsequent)
         for n in range(2, metade + 1):
             add_itens_in_dicts2(num_list, previous2, subsequent2, word, words, n)
-        print(previous2)
-        print(subsequent2)
-        print("TEste+")
-        most_frequent_previous, most_frequent_subsequent = dict_most_frequents(previous2, subsequent2,
-                                                                               number, lista_de_busca)
         lista1, lista2 = check_tie(previous, subsequent, lista_de_busca)
-        print(previous)
         frase = make_phrase(lista1, lista2, word, number)
         #  print("frase inicial: ", frase)
         if number > 3:

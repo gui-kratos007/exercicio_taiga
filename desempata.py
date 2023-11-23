@@ -1,6 +1,6 @@
-import random
 from frequencia import *
-from frase import *
+from configs import *
+
 
 def check_tie(dict1, dict2, lista):
     """
@@ -23,6 +23,19 @@ def check_tie(dict1, dict2, lista):
 
 
 def desempate_anteriores(word, dict2, number, words):
+    """
+    agrega as anteriores em comum das duas dicts(anteriores da palavra escolhida e anteriores da primeira palavra da
+    frase) em uma dict de comuns e junta seus values. Em seguida verifica a quantidade de mais comuns e se for 0
+    ele junta as dicts que mencionei antes e seus valores e utiliza a função de comparar para dar o resultado, ou seja
+    a palavra que irá para o início da frase. No caso de só existir uma palavra em comum, ela será o resultado. Por
+    fim se houver mais de uma a função de comparar será usada e trará o resultado.
+    :param word: palavra escolhida pelo usuário
+    :param dict2: anteriores em relação a palavra escolhida, que terá um valor diferente a cada rotação da função
+    phrases do arquivo frase.py.
+    :param number: numero de termos escolhidos pelo usuário
+    :param words: palavras do texto que foi escolhido pelo usuário
+    :return: palavra que será acoplada ao inicio da frase.
+    """
     anteriores_em_comum = {}
     anteriores_total = {}
     metade = number // 2
@@ -54,27 +67,20 @@ def desempate_anteriores(word, dict2, number, words):
         return escolha
 
 
-    """anteriores_em_comum = []
-
-    for i, item in enumerate(lista1):
-        for j, item2 in enumerate(lista2):
-            if item2 == item:
-                anteriores_em_comum.append(item)
-
-    if len(anteriores_em_comum) == 0:
-        anteriores = lista1 + lista2
-        escolha = random.choice(anteriores)
-        return escolha
-    elif len(anteriores_em_comum) == 1:
-        escolha = anteriores_em_comum[0]
-        return escolha
-    else:
-        result_dict = put_percentage_previous(dict1, dict2)
-        escolha = compare_frequencia_anteriores(result_dict, anteriores_em_comum)
-        return escolha"""
-
-
 def desempate_posteriores(word, dict4, number, words):
+    """
+    agrega as posteriores em comum das duas dicts(posteriores da palavra escolhida e posteriores da ultima palavra da
+    frase) em uma dict de comuns e junta seus values. Em seguida verifica a quantidade de mais comuns e se for 0
+    ele junta as dicts que mencionei antes e seus valores e utiliza a função de comparar para dar o resultado, ou seja
+    a palavra que irá para o fim da frase. No caso de só existir uma palavra em comum, ela será o resultado. Por
+    fim se houver mais de uma a função de comparar será usada e trará o resultado.
+    :param word: palavra escolhida pelo usuário
+    :param dict4: posteriores em relação a palavra escolhida, que terá um valor diferente a cada rotação da função
+    phrases do arquivo frase.py.
+    :param number: numero de termos escolhidos pelo usuário
+    :param words: palavras do texto que foi escolhido pelo usuário
+    :return: palavra que será acoplada ao fim da frase.
+    """
     posteriores_em_comum = {}
     posteriores_total = {}
     metade = number // 2
@@ -82,6 +88,9 @@ def desempate_posteriores(word, dict4, number, words):
     previous1 = {}
     subsequent1 = {}
     fill_itens(lista, word, words, previous1, subsequent1)
+    posteriores_total.update(subsequent1)
+    for i, n in enumerate(range(2, metade + 1)):
+        posteriores_total.update(dict4[f"distancia {n}"].items())
 
     for i, n in enumerate(range(2, metade + 1)):
         for key, value in subsequent1.items():
@@ -90,17 +99,15 @@ def desempate_posteriores(word, dict4, number, words):
                     posteriores_em_comum[key] = value + value2
 
     if len(posteriores_em_comum) == 0:
-        posteriores_total.update(subsequent1)
-        posteriores_total.update(dict4)
-        result_dict = put_percentage_subsequent(subsequent1, dict4)
-        escolha = compare_frequencia_posteriores(result_dict, posteriores_total)
+        result_dict = put_percentage_previous(posteriores_total)
+        escolha = compare_frequencia_anteriores(result_dict, posteriores_total)
         return escolha
     elif len(posteriores_em_comum) == 1:
         for key, value in posteriores_em_comum.items():
             escolha = key
             return escolha
     else:
-        result_dict = put_percentage_subsequent(subsequent1, dict4)
+        result_dict = put_percentage_subsequent(posteriores_em_comum)
         escolha = compare_frequencia_posteriores(result_dict, posteriores_em_comum)
         return escolha
 
@@ -114,19 +121,14 @@ def desempatar(lista):
     return escolha
 
 
-def desempatar2(um, dois):
-    """
-    escolhe um item aleatorio dentre as 2 opções que forem designadas ao chamar essa função
-    :param um: primeira opção das possiveis para desempatar
-    :param dois: segunda opção das possiveis para desempatar
-    :return: uma das duas opções possiveis, que sofreu uma escolha aleatória
-    """
-    lista = [um, dois]
-    escolha = random.choice(lista)
-    return escolha
-
-
 def desempata_lista(lista):
+    """
+    não esta sendo usada, mas se a lista for maior que 1 ele usa a função desempatar para desempatar ela, e o grande
+    diferencial é que se a lista for igual a 1 ela retorna o item inicial da lista, já que por ser unico, não tem com
+    o que desempatar
+    :param lista: uma lista que precisar ser desempatada
+    :return: item da lista que foi sorteado, ou, no caso de ser uma lista de um unico item, retorna esse item.
+    """
     options = {
         True: (desempatar(lista)),
         False: (lista[0])

@@ -1,5 +1,5 @@
 from pegar_estilo import get_style
-from gerar_frase import *
+from frase import *
 
 
 def interface():
